@@ -1,0 +1,8 @@
+[package]
+name = "daemon"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+file_mover_core = { path = "../file_mover_core" }
+tokio = { version = "1", features = ["full"] }

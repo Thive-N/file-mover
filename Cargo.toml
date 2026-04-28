@@ -1,0 +1,7 @@
+[workspace]
+members = [
+    "crates/file_mover_core",
+    "crates/daemon",
+    "crates/cli",
+    "crates/platform-linux",
+]
