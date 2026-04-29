@@ -4,6 +4,7 @@ use std::path::PathBuf;
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Config {
     pub interval_seconds: Option<u64>,
+    #[serde(default)]
     pub rules: Vec<Rule>,
 }
 
