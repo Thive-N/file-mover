@@ -29,6 +29,7 @@ enum Commands {
     DeleteRule {
         name: String,
     },
+    ListRules,
 }
 
 fn main() {
@@ -43,6 +44,7 @@ fn main() {
             extensions,
         } => add_rule(name, folder, destination, extensions),
         Commands::DeleteRule { name } => delete_rule(name),
+        Commands::ListRules => list_rules(),
     }
 }
 
@@ -112,5 +114,23 @@ fn delete_rule(name: String) {
         println!("Deleted rule '{}'", name);
     } else {
         println!("Rule not found");
+    }
+}
+
+fn list_rules() {
+    let config = load_or_create().unwrap();
+
+    if config.rules.is_empty() {
+        println!("No rules defined");
+        return;
+    }
+
+    for rule in config.rules {
+        println!(
+            "{}: {} -> {}",
+            rule.name,
+            rule.folder.display(),
+            rule.destination.display()
+        );
     }
 }
