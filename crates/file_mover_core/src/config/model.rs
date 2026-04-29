@@ -13,7 +13,10 @@ pub struct Rule {
     pub name: String,
     pub folder: PathBuf,
     pub destination: PathBuf,
-    pub whitelist: Option<Vec<String>>,
-    pub blacklist: Option<Vec<String>>,
-    pub extensions: Option<Vec<String>>,
+    #[serde(default)]
+    pub whitelist: Vec<String>,
+    #[serde(default)]
+    pub blacklist: Vec<String>,
+    #[serde(default)]
+    pub extensions: Vec<String>,
 }
