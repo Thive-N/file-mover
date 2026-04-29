@@ -75,13 +75,19 @@ fn add_rule(name: String, folder: String, destination: String, extensions: Vec<S
         name,
         folder: folder.into(),
         destination: destination.into(),
-        whitelist: None,
-        blacklist: None,
-        extensions: if extensions.is_empty() {
-            None
-        } else {
-            Some(extensions)
-        },
+        whitelist: Vec::new(),
+        blacklist: Vec::new(),
+
+        extensions: extensions
+            .into_iter()
+            .map(|ext| {
+                if ext.starts_with('.') {
+                    ext
+                } else {
+                    format!(".{}", ext)
+                }
+            })
+            .collect(),
     };
 
     config.add_rule(rule);

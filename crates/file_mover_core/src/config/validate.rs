@@ -40,9 +40,8 @@ pub fn validate_config(config: &Config) -> Result<(), Vec<ValidationError>> {
             });
         }
 
-        let has_filters = rule.whitelist.as_ref().is_some_and(|v| !v.is_empty())
-            || rule.blacklist.as_ref().is_some_and(|v| !v.is_empty())
-            || rule.extensions.as_ref().is_some_and(|v| !v.is_empty());
+        let has_filters =
+            !rule.extensions.is_empty() || !rule.whitelist.is_empty() || !rule.blacklist.is_empty();
 
         if !has_filters {
             errors.push(ValidationError::NoFilters {
@@ -50,36 +49,30 @@ pub fn validate_config(config: &Config) -> Result<(), Vec<ValidationError>> {
             });
         }
 
-        if let Some(exts) = &rule.extensions {
-            for ext in exts {
-                if !ext.starts_with('.') {
-                    errors.push(ValidationError::InvalidExtension {
-                        rule: rule.name.clone(),
-                        extension: ext.clone(),
-                    });
-                }
+        for ext in &rule.extensions {
+            if !ext.starts_with('.') {
+                errors.push(ValidationError::InvalidExtension {
+                    rule: rule.name.clone(),
+                    extension: ext.clone(),
+                });
             }
         }
 
-        if let Some(patterns) = &rule.whitelist {
-            for pat in patterns {
-                if glob::Pattern::new(pat).is_err() {
-                    errors.push(ValidationError::InvalidGlob {
-                        rule: rule.name.clone(),
-                        pattern: pat.clone(),
-                    });
-                }
+        for pat in &rule.whitelist {
+            if glob::Pattern::new(pat).is_err() {
+                errors.push(ValidationError::InvalidGlob {
+                    rule: rule.name.clone(),
+                    pattern: pat.clone(),
+                });
             }
         }
 
-        if let Some(patterns) = &rule.blacklist {
-            for pat in patterns {
-                if glob::Pattern::new(pat).is_err() {
-                    errors.push(ValidationError::InvalidGlob {
-                        rule: rule.name.clone(),
-                        pattern: pat.clone(),
-                    });
-                }
+        for pat in &rule.blacklist {
+            if glob::Pattern::new(pat).is_err() {
+                errors.push(ValidationError::InvalidGlob {
+                    rule: rule.name.clone(),
+                    pattern: pat.clone(),
+                });
             }
         }
 
