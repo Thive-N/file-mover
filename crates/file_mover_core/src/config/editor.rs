@@ -6,6 +6,7 @@ impl Config {
         self.rules.push(rule);
     }
 
+    // Returns true if a rule was deleted, false if not found
     pub fn delete_rule(&mut self, name: &str) -> bool {
         let before = self.rules.len();
         self.rules.retain(|r| r.name != name);
