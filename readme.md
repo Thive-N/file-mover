@@ -14,10 +14,10 @@ extensions = [".txt"]
 
 current state
 ```
-  Validation
-→ CLI interaction
-  Matching logic
-  File actions
+✓ Validation
+✓ CLI interaction
+→ Matching logic
+→ File actions
   Scheduler
   Linux watcher
   Notifications
