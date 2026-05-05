@@ -30,6 +30,10 @@ enum Commands {
         name: String,
     },
     ListRules,
+    TestRule {
+        name: String,
+        file: String,
+    },
 }
 
 fn main() {
@@ -45,6 +49,7 @@ fn main() {
         } => add_rule(name, folder, destination, extensions),
         Commands::DeleteRule { name } => delete_rule(name),
         Commands::ListRules => list_rules(),
+        Commands::TestRule { name, file } => test_rule(name, file),
     }
 }
 
@@ -132,5 +137,25 @@ fn list_rules() {
             rule.folder.display(),
             rule.destination.display()
         );
+    }
+}
+
+fn test_rule(name: String, file: String) {
+    let config = load_or_create().unwrap();
+
+    let rule = match config.rules.iter().find(|r| r.name == name) {
+        Some(r) => r,
+        None => {
+            eprintln!("Rule not found");
+            std::process::exit(1);
+        }
+    };
+
+    let path = std::path::Path::new(&file);
+
+    if file_mover_core::matcher::file_matches_rule(path, rule) {
+        println!("File matches the rule");
+    } else {
+        println!("File does not match the rule");
     }
 }
