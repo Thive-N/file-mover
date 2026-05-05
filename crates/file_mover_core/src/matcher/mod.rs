@@ -1,19 +1,25 @@
+pub mod glob;
+
 use crate::config::Rule;
 use std::path::Path;
 
-pub fn file_matches_rule(path: &Path, rule: &Rule) -> bool {
+pub fn file_matches_rule(path: &Path, rule: &Rule, compiled_rule: &glob::CompiledRule) -> bool {
     // Check if the file name matches the whitelist and blacklist
     // cases:
     // - If the whitelist is empty, it matches all files
     // - If the whitelist is not empty, the file name must contain at least one of the whitelist strings
     // - If the blacklist is not empty, the file name must not contain any of the blacklist strings
     if let Some(filename) = path.file_name().and_then(|f| f.to_str()) {
-        if !rule.whitelist.is_empty() && !rule.whitelist.iter().any(|w| filename.contains(w)) {
-            return false;
+        if let Some(whitelist) = &compiled_rule.whitelist {
+            if !whitelist.is_match(filename) {
+                return false;
+            }
         }
 
-        if rule.blacklist.iter().any(|b| filename.contains(b)) {
-            return false;
+        if let Some(blacklist) = &compiled_rule.blacklist {
+            if blacklist.is_match(filename) {
+                return false;
+            }
         }
     } else {
         // If the file has no name, it doesn't match
