@@ -1,8 +1,8 @@
-use std::fs;
-use std::path::PathBuf;
-
 use crate::config::Rule;
 use crate::matcher::file_matches_rule;
+use crate::matcher::glob;
+use std::fs;
+use std::path::PathBuf;
 
 pub struct ExecutionResult {
     pub moved: Vec<PathBuf>,
@@ -28,7 +28,7 @@ pub fn execute_rule(rule: &Rule) -> std::io::Result<ExecutionResult> {
                     continue;
                 }
 
-                if file_matches_rule(&path, rule) {
+                if file_matches_rule(&path, rule, &glob::compile_rule(rule)) {
                     let filename = match path.file_name() {
                         Some(f) => f,
                         None => continue,

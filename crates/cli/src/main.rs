@@ -1,5 +1,6 @@
 use clap::{Parser, Subcommand};
 use file_mover_core::config::{Rule, load_or_create, save_config, validate_config};
+use file_mover_core::matcher::glob::compile_rule;
 
 #[derive(Parser)]
 #[command(name = "file-mover")]
@@ -153,7 +154,7 @@ fn test_rule(name: String, file: String) {
 
     let path = std::path::Path::new(&file);
 
-    if file_mover_core::matcher::file_matches_rule(path, rule) {
+    if file_mover_core::matcher::file_matches_rule(path, rule, &compile_rule(rule)) {
         println!("File matches the rule");
     } else {
         println!("File does not match the rule");
