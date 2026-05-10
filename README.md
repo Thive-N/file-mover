@@ -30,8 +30,10 @@ The project is designed around:
   * add
   * delete
   * list
+  * run
+
 * File matching engine
-* Wildcard glob support planning
+* Wildcard glob support
 
 ---
 
