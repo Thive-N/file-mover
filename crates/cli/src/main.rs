@@ -35,6 +35,7 @@ enum Commands {
         name: String,
         file: String,
     },
+    Run,
 }
 
 fn main() {
@@ -51,6 +52,7 @@ fn main() {
         Commands::DeleteRule { name } => delete_rule(name),
         Commands::ListRules => list_rules(),
         Commands::TestRule { name, file } => test_rule(name, file),
+        Commands::Run => run(),
     }
 }
 
@@ -158,5 +160,39 @@ fn test_rule(name: String, file: String) {
         println!("File matches the rule");
     } else {
         println!("File does not match the rule");
+    }
+}
+
+fn run() {
+    let config = load_or_create().unwrap();
+
+    match validate_config(&config) {
+        Ok(()) => {
+            println!("Config is valid, running...");
+            let results = file_mover_core::engine::execute_rules(&config.rules);
+
+            for (rule_name, res) in results {
+                match res {
+                    Ok(result) => {
+                        println!("Rule '{}':", rule_name);
+                        println!("  Moved: {}", result.moved.len());
+                        println!("  Skipped: {}", result.skipped.len());
+                        println!("  Errors: {}", result.errors.len());
+                    }
+                    Err(e) => {
+                        eprintln!("Error executing rule '{}': {}", rule_name, e);
+                    }
+                }
+            }
+        }
+        Err(errors) => {
+            eprintln!("Config validation failed:");
+
+            for err in errors {
+                eprintln!("  - {}", err);
+            }
+
+            std::process::exit(1);
+        }
     }
 }

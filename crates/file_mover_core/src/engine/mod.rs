@@ -4,12 +4,26 @@ use crate::matcher::glob;
 use std::fs;
 use std::path::PathBuf;
 
+// struct to hold the results of executing a rule
 pub struct ExecutionResult {
     pub moved: Vec<PathBuf>,
     pub skipped: Vec<PathBuf>,
     pub errors: Vec<(PathBuf, String)>,
 }
 
+// Executes the given rules and returns a vector of results for each rule
+pub fn execute_rules(rules: &[Rule]) -> Vec<(String, std::io::Result<ExecutionResult>)> {
+    let mut results = vec![];
+
+    for rule in rules {
+        let res = execute_rule(rule);
+        results.push((rule.name.clone(), res));
+    }
+
+    results
+}
+
+// Executes a single rule and returns the result
 pub fn execute_rule(rule: &Rule) -> std::io::Result<ExecutionResult> {
     let mut result = ExecutionResult {
         moved: vec![],
