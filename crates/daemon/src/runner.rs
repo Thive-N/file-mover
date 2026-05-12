@@ -1,10 +1,22 @@
 use file_mover_core::config::{load_or_create, validate_config};
 use file_mover_core::engine::execute_rule;
-
 use std::time::Duration;
-
+use tokio::signal::unix::{SignalKind, signal};
 use tracing::{error, info};
 
+async fn shutdown_signal() {
+    let mut sigterm = signal(SignalKind::terminate()).expect("failed to listen for SIGTERM signal");
+    tokio::select! {
+        _= tokio::signal::ctrl_c() => {
+            info!("CTRL-C received");
+        },
+        _ = sigterm.recv() => {
+            info!("SIGTERM received");
+        }
+    }
+}
+/// Main loop of the daemon. Loads config, validates it, executes rules, and sleeps for the configured interval.
+/// TODO: Cleaner daemon loop with better error handling and shutdown support.
 pub async fn run() -> Result<(), Box<dyn std::error::Error>> {
     loop {
         let config = match load_or_create() {
@@ -44,6 +56,16 @@ pub async fn run() -> Result<(), Box<dyn std::error::Error>> {
 
         info!("sleeping for {} seconds", interval);
 
-        tokio::time::sleep(Duration::from_secs(interval)).await;
+        tokio::select! {
+            _ = tokio::time::sleep(Duration::from_secs(interval)) => {
+
+            },
+            _ = shutdown_signal() => {
+                info!("shutdown signal received, exiting...");
+                break;
+            }
+        }
     }
+    info!("daemon exiting");
+    Ok(())
 }
