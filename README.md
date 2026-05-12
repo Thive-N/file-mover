@@ -145,7 +145,6 @@ file-mover list
 ```
 
 ---
-
 # Current Development Status
 
 ## Completed
@@ -162,15 +161,47 @@ file-mover list
 * [x] Basic file matching engine
 * [x] Extension filtering
 * [x] Initial whitelist/blacklist support
+* [x] Replace string matching with glob matching
+* [x] Compile globsets for performance
+* [x] Implement execution engine
+* [x] Implement dry-run mode
+* [x] Basic daemon loop
+* [x] Configurable daemon interval
+* [x] Config reload every daemon cycle
+* [x] Daemon rule execution
+* [x] Structured daemon logging
+* [x] Graceful shutdown handling (SIGINT/SIGTERM)
+* [x] Async daemon runtime using Tokio
 
 ---
 
 ## In Progress
 
-* [ ] Replace string matching with glob matching
-* [ ] Compile globsets for performance
-* [ ] Implement execution engine
-* [ ] Implement dry-run mode
+### Core Engine
+
+* [ ] Conflict handling
+* [ ] Recursive directory support
+* [ ] Case-insensitive matching
+* [ ] Symlink handling
+
+### Daemon
+
+* [ ] Config hot reload without polling
+* [ ] Better shutdown coordination
+* [ ] Parallel rule execution
+* [ ] Daemon state management
+
+### Logging
+
+* [ ] Persistent log file output
+* [ ] Log rotation
+* [ ] Structured error reporting
+
+### Testing
+
+* [ ] Matcher unit tests
+* [ ] Engine execution tests
+* [ ] Daemon integration tests
 
 ---
 
@@ -178,19 +209,14 @@ file-mover list
 
 ### Core Engine
 
-* [ ] File moving logic
 * [ ] File copying support
-* [ ] Recursive directory support
-* [ ] Conflict handling
-* [ ] Case-insensitive matching
-* [ ] Symlink handling
-
-### Daemon
-
-* [ ] Background scheduler
-* [ ] Config hot reload
-* [ ] Graceful shutdown handling
-* [ ] Periodic rescanning
+* [ ] Rule priorities
+* [ ] Scheduling per rule
+* [ ] Age-based filters
+* [ ] File size filters
+* [ ] Regex filtering support (optional advanced mode)
+* [ ] Duplicate file handling
+* [ ] Atomic move safety improvements
 
 ### Linux Features
 
@@ -199,28 +225,38 @@ file-mover list
 * [ ] Desktop notifications
 * [ ] journald logging
 
-### Logging
+### CLI
 
-* [ ] Structured logging
-* [ ] Rotating log files
-* [ ] Error reporting
+* [ ] Interactive rule creation
+* [ ] Config editing commands
+* [ ] Dry-run preview command
+* [ ] Rule testing command
 
-### Testing
-
-* [ ] Unit tests for matcher
-* [ ] Config validation tests
-* [ ] Integration tests
-* [ ] End-to-end filesystem tests
-
-### Future Features
+### Frontend
 
 * [ ] TUI configuration editor
 * [ ] Web UI
-* [ ] Cross-platform support
-* [ ] Rule priorities
-* [ ] Scheduling per rule
-* [ ] Age-based filters
-* [ ] File size filters
+
+### Cross Platform
+
+* [ ] Windows platform layer
+* [ ] macOS platform layer
+* [ ] Platform abstraction cleanup
+
+### Testing
+
+* [ ] Config validation tests
+* [ ] End-to-end filesystem tests
+* [ ] Temporary directory test harness
+* [ ] CI pipeline
+
+### Packaging
+
+* [ ] Release builds
+* [ ] systemd service file
+* [ ] Debian package
+* [ ] AppImage support
+* [ ] Static binary builds
 
 ---
 
